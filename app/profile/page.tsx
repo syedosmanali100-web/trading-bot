@@ -67,18 +67,6 @@ interface SignalHistory {
   }
 }
 
-const USERS_KEY = 'app_users_db'
-
-const getUsers = (): UserData[] => {
-  if (typeof window === 'undefined') return []
-  const data = localStorage.getItem(USERS_KEY)
-  return data ? JSON.parse(data) : []
-}
-
-const saveUsers = (users: UserData[]) => {
-  localStorage.setItem(USERS_KEY, JSON.stringify(users))
-}
-
 export default function ProfilePage() {
   const router = useRouter()
   const [userData, setUserData] = useState<UserData | null>(null)
@@ -106,25 +94,38 @@ export default function ProfilePage() {
       return
     }
 
-    try {
-      const session = JSON.parse(userSession)
-      const allUsers = getUsers()
-      const currentUser = allUsers.find(u => u.id === session.id)
-      
-      if (currentUser) {
-        setUserData(currentUser)
-        loadSignalStats()
-      } else {
-        toast.error("User not found")
+    const loadUserData = async () => {
+      try {
+        const session = JSON.parse(userSession)
+        
+        // Fetch users from API
+        const response = await fetch('/api/users')
+        const data = await response.json()
+        
+        if (data.success) {
+          const currentUser = data.users.find((u: UserData) => u.id === session.id)
+          
+          if (currentUser) {
+            setUserData(currentUser)
+            loadSignalStats()
+          } else {
+            toast.error("User not found")
+            router.push('/login')
+          }
+        } else {
+          toast.error("Failed to load user data")
+          router.push('/login')
+        }
+      } catch (error) {
+        console.error('Error loading user:', error)
+        toast.error("Failed to load user data")
         router.push('/login')
+      } finally {
+        setIsLoading(false)
       }
-    } catch (error) {
-      console.error('Error loading user:', error)
-      toast.error("Failed to load user data")
-      router.push('/login')
-    } finally {
-      setIsLoading(false)
     }
+
+    loadUserData()
     
     // Auto-refresh signal history every 5 seconds
     const interval = setInterval(() => {
@@ -161,7 +162,7 @@ export default function ProfilePage() {
     setTodaySignals(todayCount)
   }
 
-  const handlePasswordChange = () => {
+  const handlePasswordChange = async () => {
     if (!userData) return
 
     // Validation
@@ -188,13 +189,19 @@ export default function ProfilePage() {
     setIsChangingPassword(true)
 
     try {
-      const allUsers = getUsers()
-      const userIndex = allUsers.findIndex(u => u.id === userData.id)
-      
-      if (userIndex !== -1) {
-        allUsers[userIndex].password = newPassword
-        saveUsers(allUsers)
-        
+      // Update password via API
+      const response = await fetch('/api/users/update-password', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          userId: userData.id,
+          newPassword: newPassword
+        })
+      })
+
+      const data = await response.json()
+
+      if (data.success) {
         // Update local state
         setUserData({ ...userData, password: newPassword })
         
@@ -204,6 +211,8 @@ export default function ProfilePage() {
         setCurrentPassword("")
         setNewPassword("")
         setConfirmPassword("")
+      } else {
+        toast.error(data.error || "Failed to change password")
       }
     } catch (error) {
       console.error('Error changing password:', error)
