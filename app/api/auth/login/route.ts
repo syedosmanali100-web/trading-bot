@@ -21,11 +21,27 @@ export async function POST(request: Request) {
       );
     }
     
+    // Get the base URL from the request
+    const protocol = request.headers.get('x-forwarded-proto') || 'http';
+    const host = request.headers.get('host') || 'localhost:3000';
+    const baseUrl = `${protocol}://${host}`;
+    
     // Get users from the users API
-    const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
     const usersResponse = await fetch(`${baseUrl}/api/users`, {
-      cache: 'no-store'
+      cache: 'no-store',
+      headers: {
+        'Content-Type': 'application/json',
+      }
     });
+    
+    if (!usersResponse.ok) {
+      console.error('Failed to fetch users:', usersResponse.status);
+      return NextResponse.json(
+        { success: false, error: 'Failed to fetch users' },
+        { status: 500 }
+      );
+    }
+    
     const usersData = await usersResponse.json();
     
     if (!usersData.success) {
