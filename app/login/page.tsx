@@ -47,58 +47,30 @@ export default function LoginPage() {
     setIsLoading(true)
 
     try {
-      // Get all users from localStorage
-      const allUsers = getUsers()
-      
-      // Debug: Log for troubleshooting
-      console.log('Total users in storage:', allUsers.length)
-      console.log('Attempting login with:', username)
-      
-      // Trim whitespace from inputs
-      const trimmedUsername = username.trim()
-      const trimmedPassword = password.trim()
-      
-      // Find user with matching credentials (case-insensitive email)
-      const userData = allUsers.find(u => 
-        u.username.toLowerCase() === trimmedUsername.toLowerCase() && 
-        u.password === trimmedPassword
-      )
+      // Call login API
+      const response = await fetch('/api/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          username: username.trim(),
+          password: password.trim()
+        })
+      })
 
-      if (!userData) {
-        console.log('Login failed - user not found')
-        console.log('Available users:', allUsers.map(u => u.username))
-        toast.error("Invalid username or password")
-        setIsLoading(false)
-        return
-      }
+      const data = await response.json()
 
-      // Check if subscription is active
-      if (!userData.is_active) {
-        toast.error("Your subscription is not active. Please contact admin.")
-        setIsLoading(false)
-        return
-      }
-
-      // Check if subscription has expired
-      const subscriptionEnd = new Date(userData.subscription_end)
-      const now = new Date()
-      if (subscriptionEnd < now) {
-        toast.error("Your subscription has expired. Please contact admin.")
+      if (!data.success) {
+        toast.error(data.error || "Login failed")
         setIsLoading(false)
         return
       }
 
       // Store user session
-      localStorage.setItem('user_session', JSON.stringify({
-        id: userData.id,
-        username: userData.username,
-        is_admin: userData.is_admin,
-        subscription_end: userData.subscription_end
-      }))
+      localStorage.setItem('user_session', JSON.stringify(data.user))
 
       toast.success("Login successful!")
       
-      if (userData.is_admin) {
+      if (data.user.is_admin) {
         router.push('/admin')
       } else {
         router.push('/')

@@ -85,11 +85,17 @@ export default function AdminPage() {
     }
   }
 
-  const loadUsers = () => {
+  const loadUsers = async () => {
     setIsLoading(true)
     try {
-      const allUsers = getUsers()
-      setUsers(allUsers)
+      const response = await fetch('/api/users')
+      const data = await response.json()
+      
+      if (data.success) {
+        setUsers(data.users)
+      } else {
+        toast.error("Failed to load users")
+      }
     } catch (error) {
       console.error('Error loading users:', error)
       toast.error("Failed to load users")
@@ -115,7 +121,7 @@ export default function AdminPage() {
     })
   }
 
-  const createNewUser = () => {
+  const createNewUser = async () => {
     if (!newUserEmail.trim()) {
       toast.error("Please enter a valid email address")
       return
@@ -129,33 +135,31 @@ export default function AdminPage() {
 
     setIsCreatingUser(true)
     try {
-      const allUsers = getUsers()
-      
-      // Check if email already exists
-      const existingUser = allUsers.find(u => u.username === newUserEmail)
-      if (existingUser) {
-        toast.error("User with this email already exists")
-        setIsCreatingUser(false)
-        return
-      }
-
       const username = newUserEmail
       const password = generateRandomString(12)
       const subscriptionEnd = new Date()
       subscriptionEnd.setDate(subscriptionEnd.getDate() + parseInt(subscriptionDays))
 
-      const newUser: User = {
-        id: generateUUID(),
-        username,
-        password,
-        is_admin: false,
-        is_active: true,
-        subscription_end: subscriptionEnd.toISOString(),
-        created_at: new Date().toISOString()
-      }
+      const response = await fetch('/api/users', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          id: generateUUID(),
+          username,
+          password,
+          is_admin: false,
+          is_active: true,
+          subscription_end: subscriptionEnd.toISOString()
+        })
+      })
 
-      allUsers.push(newUser)
-      saveUsers(allUsers)
+      const data = await response.json()
+
+      if (!data.success) {
+        toast.error(data.error || "Failed to create user")
+        setIsCreatingUser(false)
+        return
+      }
 
       toast.success("User created successfully!")
       
@@ -176,33 +180,43 @@ export default function AdminPage() {
     }
   }
 
-  const deleteUser = (userId: string) => {
+  const deleteUser = async (userId: string) => {
     if (!confirm("Are you sure you want to delete this user?")) return
 
     try {
-      const allUsers = getUsers()
-      const updatedUsers = allUsers.filter(u => u.id !== userId)
-      saveUsers(updatedUsers)
+      const response = await fetch(`/api/users?id=${userId}`, {
+        method: 'DELETE'
+      })
 
-      toast.success("User deleted successfully")
-      loadUsers()
+      const data = await response.json()
+
+      if (data.success) {
+        toast.success("User deleted successfully")
+        loadUsers()
+      } else {
+        toast.error("Failed to delete user")
+      }
     } catch (error) {
       console.error('Error deleting user:', error)
       toast.error("Failed to delete user")
     }
   }
 
-  const toggleUserStatus = (userId: string) => {
+  const toggleUserStatus = async (userId: string) => {
     try {
-      const allUsers = getUsers()
-      const userIndex = allUsers.findIndex(u => u.id === userId)
-      
-      if (userIndex !== -1) {
-        allUsers[userIndex].is_active = !allUsers[userIndex].is_active
-        saveUsers(allUsers)
-        
-        toast.success(`User ${allUsers[userIndex].is_active ? 'activated' : 'deactivated'} successfully`)
+      const response = await fetch('/api/users', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id: userId })
+      })
+
+      const data = await response.json()
+
+      if (data.success) {
+        toast.success(`User ${data.user.is_active ? 'activated' : 'deactivated'} successfully`)
         loadUsers()
+      } else {
+        toast.error("Failed to update user status")
       }
     } catch (error) {
       console.error('Error updating user status:', error)
@@ -225,8 +239,7 @@ export default function AdminPage() {
   }
 
   const exportUsers = () => {
-    const allUsers = getUsers()
-    const dataStr = JSON.stringify(allUsers, null, 2)
+    const dataStr = JSON.stringify(users, null, 2)
     const dataBlob = new Blob([dataStr], { type: 'application/json' })
     const url = URL.createObjectURL(dataBlob)
     const link = document.createElement('a')
@@ -236,21 +249,43 @@ export default function AdminPage() {
     toast.success("Users exported successfully!")
   }
 
-  const importUsers = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const importUsers = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0]
     if (!file) return
 
     const reader = new FileReader()
-    reader.onload = (e) => {
+    reader.onload = async (e) => {
       try {
         const importedUsers = JSON.parse(e.target?.result as string)
-        if (Array.isArray(importedUsers)) {
-          saveUsers(importedUsers)
-          loadUsers()
-          toast.success(`Imported ${importedUsers.length} users successfully!`)
-        } else {
+        if (!Array.isArray(importedUsers)) {
           toast.error("Invalid file format")
+          return
         }
+
+        let successCount = 0
+        let errorCount = 0
+
+        for (const user of importedUsers) {
+          try {
+            const response = await fetch('/api/users', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify(user)
+            })
+
+            const data = await response.json()
+            if (data.success) {
+              successCount++
+            } else {
+              errorCount++
+            }
+          } catch (error) {
+            errorCount++
+          }
+        }
+
+        loadUsers()
+        toast.success(`Imported ${successCount} users successfully! ${errorCount > 0 ? `${errorCount} failed.` : ''}`)
       } catch (error) {
         console.error('Import error:', error)
         toast.error("Failed to import users")
@@ -329,7 +364,7 @@ export default function AdminPage() {
             <div className="flex-1">
               <h1 className="text-xl sm:text-2xl md:text-3xl font-bold gradient-text">ADMIN PANEL</h1>
               <p className="text-xs sm:text-sm text-muted-foreground">User Management & Subscription</p>
-              <p className="text-xs text-primary mt-1">💾 {users.length} users in storage</p>
+              <p className="text-xs text-primary mt-1">☁️ {users.length} users in cloud database</p>
             </div>
           </div>
           <div className="flex flex-wrap items-center gap-2 w-full sm:w-auto">

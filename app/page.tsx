@@ -26,6 +26,8 @@ import {
 import Link from "next/link"
 import { getPriceService, fetchCurrentPrice } from "@/utils/priceService"
 import { getSimulatedPriceService, fetchCurrentPriceFree } from "@/utils/priceServiceFree"
+import MLTab from "@/components/MLTab"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 
 // Types
 interface TrendSignal {
@@ -79,6 +81,7 @@ export default function TradingDashboard() {
   const [isAnalyzing, setIsAnalyzing] = useState(false)
   const [analysisStep, setAnalysisStep] = useState("")
   const [currentUserId, setCurrentUserId] = useState<string>("")
+  const [activeTab, setActiveTab] = useState("signals")
 
   const intervalRef = useRef<NodeJS.Timeout | null>(null)
   const priceServiceRef = useRef<ReturnType<typeof getPriceService>>(null)
@@ -577,6 +580,29 @@ export default function TradingDashboard() {
           </CardContent>
         </Card>
 
+        {/* Tabs Navigation */}
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+          <TabsList className="grid w-full grid-cols-2 h-auto p-1 bg-secondary/50">
+            <TabsTrigger 
+              value="signals" 
+              className="flex items-center gap-2 py-3 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
+            >
+              <Zap className="w-4 h-4" />
+              <span className="hidden sm:inline">Trading Signals</span>
+              <span className="sm:hidden">Signals</span>
+            </TabsTrigger>
+            <TabsTrigger 
+              value="ml-analysis" 
+              className="flex items-center gap-2 py-3 data-[state=active]:bg-gradient-to-r data-[state=active]:from-purple-600 data-[state=active]:to-blue-600 data-[state=active]:text-white"
+            >
+              <Brain className="w-4 h-4" />
+              <span className="hidden sm:inline">AI Analysis</span>
+              <span className="sm:hidden">AI</span>
+            </TabsTrigger>
+          </TabsList>
+
+          {/* Signals Tab Content */}
+          <TabsContent value="signals" className="mt-4 sm:mt-6">
         {/* Main Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6">
           {/* Left: Settings */}
@@ -912,6 +938,13 @@ export default function TradingDashboard() {
           </p>
           <p className="mt-1">Trading involves risk. Signals are not financial advice.</p>
         </div>
+          </TabsContent>
+
+          {/* ML Analysis Tab Content */}
+          <TabsContent value="ml-analysis" className="mt-4 sm:mt-6">
+            <MLTab />
+          </TabsContent>
+        </Tabs>
       </div>
     </div>
   )

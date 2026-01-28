@@ -1,0 +1,177 @@
+[
+  {
+    "symbol": "EURUSD",
+    "timeframe": "1m",
+    "status": "NO_DATA",
+    "raw_rows": 0,
+    "final_rows": 0
+  },
+  {
+    "symbol": "EURUSD",
+    "timeframe": "5m",
+    "status": "NO_DATA",
+    "raw_rows": 0,
+    "final_rows": 0
+  },
+  {
+    "symbol": "EURUSD",
+    "timeframe": "15m",
+    "status": "NO_DATA",
+    "raw_rows": 0,
+    "final_rows": 0
+  },
+  {
+    "symbol": "EURUSD",
+    "timeframe": "1h",
+    "status": "NO_DATA",
+    "raw_rows": 0,
+    "final_rows": 0
+  },
+  {
+    "symbol": "EURUSD",
+    "timeframe": "4h",
+    "status": "NO_DATA",
+    "raw_rows": 0,
+    "final_rows": 0
+  },
+  {
+    "symbol": "GBPUSD",
+    "timeframe": "1m",
+    "status": "NO_DATA",
+    "raw_rows": 0,
+    "final_rows": 0
+  },
+  {
+    "symbol": "GBPUSD",
+    "timeframe": "5m",
+    "status": "NO_DATA",
+    "raw_rows": 0,
+    "final_rows": 0
+  },
+  {
+    "symbol": "GBPUSD",
+    "timeframe": "15m",
+    "status": "NO_DATA",
+    "raw_rows": 0,
+    "final_rows": 0
+  },
+  {
+    "symbol": "GBPUSD",
+    "timeframe": "1h",
+    "status": "NO_DATA",
+    "raw_rows": 0,
+    "final_rows": 0
+  },
+  {
+    "symbol": "GBPUSD",
+    "timeframe": "4h",
+    "status": "NO_DATA",
+    "raw_rows": 0,
+    "final_rows": 0
+  },
+  {
+    "symbol": "USDJPY",
+    "timeframe": "1m",
+    "status": "NO_DATA",
+    "raw_rows": 0,
+    "final_rows": 0
+  },
+  {
+    "symbol": "USDJPY",
+    "timeframe": "5m",
+    "status": "NO_DATA",
+    "raw_rows": 0,
+    "final_rows": 0
+  },
+  {
+    "symbol": "USDJPY",
+    "timeframe": "15m",
+    "status": "NO_DATA",
+    "raw_rows": 0,
+    "final_rows": 0
+  },
+  {
+    "symbol": "USDJPY",
+    "timeframe": "1h",
+    "status": "NO_DATA",
+    "raw_rows": 0,
+    "final_rows": 0
+  },
+  {
+    "symbol": "USDJPY",
+    "timeframe": "4h",
+    "status": "NO_DATA",
+    "raw_rows": 0,
+    "final_rows": 0
+  },
+  {
+    "symbol": "BTCUSD",
+    "timeframe": "1m",
+    "status": "NO_DATA",
+    "raw_rows": 0,
+    "final_rows": 0
+  },
+  {
+    "symbol": "BTCUSD",
+    "timeframe": "5m",
+    "status": "NO_DATA",
+    "raw_rows": 0,
+    "final_rows": 0
+  },
+  {
+    "symbol": "BTCUSD",
+    "timeframe": "15m",
+    "status": "NO_DATA",
+    "raw_rows": 0,
+    "final_rows": 0
+  },
+  {
+    "symbol": "BTCUSD",
+    "timeframe": "1h",
+    "status": "NO_DATA",
+    "raw_rows": 0,
+    "final_rows": 0
+  },
+  {
+    "symbol": "BTCUSD",
+    "timeframe": "4h",
+    "status": "NO_DATA",
+    "raw_rows": 0,
+    "final_rows": 0
+  },
+  {
+    "symbol": "ETHUSD",
+    "timeframe": "1m",
+    "status": "NO_DATA",
+    "raw_rows": 0,
+    "final_rows": 0
+  },
+  {
+    "symbol": "ETHUSD",
+    "timeframe": "5m",
+    "status": "NO_DATA",
+    "raw_rows": 0,
+    "final_rows": 0
+  },
+  {
+    "symbol": "ETHUSD",
+    "timeframe": "15m",
+    "status": "NO_DATA",
+    "raw_rows": 0,
+    "final_rows": 0
+  },
+  {
+    "symbol": "ETHUSD",
+    "timeframe": "1h",
+    "status": "NO_DATA",
+    "raw_rows": 0,
+    "final_rows": 0
+  },
+  {
+    "symbol": "ETHUSD",
+    "timeframe": "4h",
+    "status": "NO_DATA",
+    "raw_rows": 0,
+    "final_rows": 0
+  }
+]

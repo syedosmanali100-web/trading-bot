@@ -1,0 +1,179 @@
+2026-01-28 20:17:29,303 - __main__ - INFO - ================================================================================
+2026-01-28 20:17:29,304 - __main__ - INFO - DATA INGESTION PIPELINE STARTED
+2026-01-28 20:17:29,304 - __main__ - INFO - ================================================================================
+2026-01-28 20:17:29,305 - __main__ - INFO - Symbols: ['EURUSD', 'GBPUSD', 'USDJPY', 'BTCUSD', 'ETHUSD']
+2026-01-28 20:17:29,306 - __main__ - INFO - Timeframes: ['1m', '5m', '15m', '1h', '4h']
+2026-01-28 20:17:29,306 - __main__ - INFO - Date Range: 2021-01-29 14:47:29.251740 to 2026-01-28 14:47:29.251740
+2026-01-28 20:17:29,307 - __main__ - INFO - Output Format: parquet
+2026-01-28 20:17:29,307 - __main__ - INFO - ================================================================================
+2026-01-28 20:17:29,308 - __main__ - INFO - Starting ingestion for 25 tasks...
+2026-01-28 20:17:29,308 - __main__ - INFO - 
+[1/25] Processing EURUSD 1m
+2026-01-28 20:17:29,309 - __main__ - INFO - Fetching data for EURUSD 1m...
+2026-01-28 20:17:30,177 - fetcher - ERROR - Error in yfinance fetch: module 'ssl' has no attribute 'wrap_socket'
+2026-01-28 20:17:30,178 - __main__ - WARNING - No data fetched for EURUSD 1m
+2026-01-28 20:17:30,178 - __main__ - INFO - 
+[2/25] Processing EURUSD 5m
+2026-01-28 20:17:30,179 - __main__ - INFO - Fetching data for EURUSD 5m...
+2026-01-28 20:17:30,202 - fetcher - ERROR - Error in yfinance fetch: module 'ssl' has no attribute 'wrap_socket'
+2026-01-28 20:17:30,202 - __main__ - WARNING - No data fetched for EURUSD 5m
+2026-01-28 20:17:30,203 - __main__ - INFO - 
+[3/25] Processing EURUSD 15m
+2026-01-28 20:17:30,203 - __main__ - INFO - Fetching data for EURUSD 15m...
+2026-01-28 20:17:30,225 - fetcher - ERROR - Error in yfinance fetch: module 'ssl' has no attribute 'wrap_socket'
+2026-01-28 20:17:30,225 - __main__ - WARNING - No data fetched for EURUSD 15m
+2026-01-28 20:17:30,226 - __main__ - INFO - 
+[4/25] Processing EURUSD 1h
+2026-01-28 20:17:30,226 - __main__ - INFO - Fetching data for EURUSD 1h...
+2026-01-28 20:17:30,251 - fetcher - ERROR - Error in yfinance fetch: module 'ssl' has no attribute 'wrap_socket'
+2026-01-28 20:17:30,251 - __main__ - WARNING - No data fetched for EURUSD 1h
+2026-01-28 20:17:30,252 - __main__ - INFO - 
+[5/25] Processing EURUSD 4h
+2026-01-28 20:17:30,252 - __main__ - INFO - Fetching data for EURUSD 4h...
+2026-01-28 20:17:30,279 - fetcher - ERROR - Error in yfinance fetch: module 'ssl' has no attribute 'wrap_socket'
+2026-01-28 20:17:30,281 - __main__ - WARNING - No data fetched for EURUSD 4h
+2026-01-28 20:17:30,281 - __main__ - INFO - 
+[6/25] Processing GBPUSD 1m
+2026-01-28 20:17:30,281 - __main__ - INFO - Fetching data for GBPUSD 1m...
+2026-01-28 20:17:30,301 - fetcher - ERROR - Error in yfinance fetch: module 'ssl' has no attribute 'wrap_socket'
+2026-01-28 20:17:30,302 - __main__ - WARNING - No data fetched for GBPUSD 1m
+2026-01-28 20:17:30,302 - __main__ - INFO - 
+[7/25] Processing GBPUSD 5m
+2026-01-28 20:17:30,302 - __main__ - INFO - Fetching data for GBPUSD 5m...
+2026-01-28 20:17:30,320 - fetcher - ERROR - Error in yfinance fetch: module 'ssl' has no attribute 'wrap_socket'
+2026-01-28 20:17:30,321 - __main__ - WARNING - No data fetched for GBPUSD 5m
+2026-01-28 20:17:30,321 - __main__ - INFO - 
+[8/25] Processing GBPUSD 15m
+2026-01-28 20:17:30,321 - __main__ - INFO - Fetching data for GBPUSD 15m...
+2026-01-28 20:17:30,338 - fetcher - ERROR - Error in yfinance fetch: module 'ssl' has no attribute 'wrap_socket'
+2026-01-28 20:17:30,339 - __main__ - WARNING - No data fetched for GBPUSD 15m
+2026-01-28 20:17:30,339 - __main__ - INFO - 
+[9/25] Processing GBPUSD 1h
+2026-01-28 20:17:30,339 - __main__ - INFO - Fetching data for GBPUSD 1h...
+2026-01-28 20:17:30,359 - fetcher - ERROR - Error in yfinance fetch: module 'ssl' has no attribute 'wrap_socket'
+2026-01-28 20:17:30,360 - __main__ - WARNING - No data fetched for GBPUSD 1h
+2026-01-28 20:17:30,360 - __main__ - INFO - 
+[10/25] Processing GBPUSD 4h
+2026-01-28 20:17:30,363 - __main__ - INFO - Fetching data for GBPUSD 4h...
+2026-01-28 20:17:30,392 - fetcher - ERROR - Error in yfinance fetch: module 'ssl' has no attribute 'wrap_socket'
+2026-01-28 20:17:30,392 - __main__ - WARNING - No data fetched for GBPUSD 4h
+2026-01-28 20:17:30,393 - __main__ - INFO - 
+[11/25] Processing USDJPY 1m
+2026-01-28 20:17:30,393 - __main__ - INFO - Fetching data for USDJPY 1m...
+2026-01-28 20:17:30,420 - fetcher - ERROR - Error in yfinance fetch: module 'ssl' has no attribute 'wrap_socket'
+2026-01-28 20:17:30,421 - __main__ - WARNING - No data fetched for USDJPY 1m
+2026-01-28 20:17:30,422 - __main__ - INFO - 
+[12/25] Processing USDJPY 5m
+2026-01-28 20:17:30,422 - __main__ - INFO - Fetching data for USDJPY 5m...
+2026-01-28 20:17:30,448 - fetcher - ERROR - Error in yfinance fetch: module 'ssl' has no attribute 'wrap_socket'
+2026-01-28 20:17:30,449 - __main__ - WARNING - No data fetched for USDJPY 5m
+2026-01-28 20:17:30,449 - __main__ - INFO - 
+[13/25] Processing USDJPY 15m
+2026-01-28 20:17:30,450 - __main__ - INFO - Fetching data for USDJPY 15m...
+2026-01-28 20:17:30,478 - fetcher - ERROR - Error in yfinance fetch: module 'ssl' has no attribute 'wrap_socket'
+2026-01-28 20:17:30,479 - __main__ - WARNING - No data fetched for USDJPY 15m
+2026-01-28 20:17:30,480 - __main__ - INFO - 
+[14/25] Processing USDJPY 1h
+2026-01-28 20:17:30,480 - __main__ - INFO - Fetching data for USDJPY 1h...
+2026-01-28 20:17:30,504 - fetcher - ERROR - Error in yfinance fetch: module 'ssl' has no attribute 'wrap_socket'
+2026-01-28 20:17:30,505 - __main__ - WARNING - No data fetched for USDJPY 1h
+2026-01-28 20:17:30,505 - __main__ - INFO - 
+[15/25] Processing USDJPY 4h
+2026-01-28 20:17:30,506 - __main__ - INFO - Fetching data for USDJPY 4h...
+2026-01-28 20:17:30,531 - fetcher - ERROR - Error in yfinance fetch: module 'ssl' has no attribute 'wrap_socket'
+2026-01-28 20:17:30,532 - __main__ - WARNING - No data fetched for USDJPY 4h
+2026-01-28 20:17:30,532 - __main__ - INFO - 
+[16/25] Processing BTCUSD 1m
+2026-01-28 20:17:30,533 - __main__ - INFO - Fetching data for BTCUSD 1m...
+2026-01-28 20:17:30,573 - fetcher - ERROR - Error in yfinance fetch: module 'ssl' has no attribute 'wrap_socket'
+2026-01-28 20:17:30,619 - __main__ - WARNING - No data fetched for BTCUSD 1m
+2026-01-28 20:17:30,626 - __main__ - INFO - 
+[17/25] Processing BTCUSD 5m
+2026-01-28 20:17:30,627 - __main__ - INFO - Fetching data for BTCUSD 5m...
+2026-01-28 20:17:30,657 - fetcher - ERROR - Error in yfinance fetch: module 'ssl' has no attribute 'wrap_socket'
+2026-01-28 20:17:30,658 - __main__ - WARNING - No data fetched for BTCUSD 5m
+2026-01-28 20:17:30,658 - __main__ - INFO - 
+[18/25] Processing BTCUSD 15m
+2026-01-28 20:17:30,659 - __main__ - INFO - Fetching data for BTCUSD 15m...
+2026-01-28 20:17:30,679 - fetcher - ERROR - Error in yfinance fetch: module 'ssl' has no attribute 'wrap_socket'
+2026-01-28 20:17:30,681 - __main__ - WARNING - No data fetched for BTCUSD 15m
+2026-01-28 20:17:30,682 - __main__ - INFO - 
+[19/25] Processing BTCUSD 1h
+2026-01-28 20:17:30,682 - __main__ - INFO - Fetching data for BTCUSD 1h...
+2026-01-28 20:17:30,704 - fetcher - ERROR - Error in yfinance fetch: module 'ssl' has no attribute 'wrap_socket'
+2026-01-28 20:17:30,704 - __main__ - WARNING - No data fetched for BTCUSD 1h
+2026-01-28 20:17:30,705 - __main__ - INFO - 
+[20/25] Processing BTCUSD 4h
+2026-01-28 20:17:30,705 - __main__ - INFO - Fetching data for BTCUSD 4h...
+2026-01-28 20:17:30,730 - fetcher - ERROR - Error in yfinance fetch: module 'ssl' has no attribute 'wrap_socket'
+2026-01-28 20:17:30,731 - __main__ - WARNING - No data fetched for BTCUSD 4h
+2026-01-28 20:17:30,731 - __main__ - INFO - 
+[21/25] Processing ETHUSD 1m
+2026-01-28 20:17:30,732 - __main__ - INFO - Fetching data for ETHUSD 1m...
+2026-01-28 20:17:30,756 - fetcher - ERROR - Error in yfinance fetch: module 'ssl' has no attribute 'wrap_socket'
+2026-01-28 20:17:30,756 - __main__ - WARNING - No data fetched for ETHUSD 1m
+2026-01-28 20:17:30,757 - __main__ - INFO - 
+[22/25] Processing ETHUSD 5m
+2026-01-28 20:17:30,757 - __main__ - INFO - Fetching data for ETHUSD 5m...
+2026-01-28 20:17:30,783 - fetcher - ERROR - Error in yfinance fetch: module 'ssl' has no attribute 'wrap_socket'
+2026-01-28 20:17:30,784 - __main__ - WARNING - No data fetched for ETHUSD 5m
+2026-01-28 20:17:30,784 - __main__ - INFO - 
+[23/25] Processing ETHUSD 15m
+2026-01-28 20:17:30,784 - __main__ - INFO - Fetching data for ETHUSD 15m...
+2026-01-28 20:17:30,806 - fetcher - ERROR - Error in yfinance fetch: module 'ssl' has no attribute 'wrap_socket'
+2026-01-28 20:17:30,807 - __main__ - WARNING - No data fetched for ETHUSD 15m
+2026-01-28 20:17:30,807 - __main__ - INFO - 
+[24/25] Processing ETHUSD 1h
+2026-01-28 20:17:30,808 - __main__ - INFO - Fetching data for ETHUSD 1h...
+2026-01-28 20:17:30,833 - fetcher - ERROR - Error in yfinance fetch: module 'ssl' has no attribute 'wrap_socket'
+2026-01-28 20:17:30,834 - __main__ - WARNING - No data fetched for ETHUSD 1h
+2026-01-28 20:17:30,834 - __main__ - INFO - 
+[25/25] Processing ETHUSD 4h
+2026-01-28 20:17:30,834 - __main__ - INFO - Fetching data for ETHUSD 4h...
+2026-01-28 20:17:30,856 - fetcher - ERROR - Error in yfinance fetch: module 'ssl' has no attribute 'wrap_socket'
+2026-01-28 20:17:30,856 - __main__ - WARNING - No data fetched for ETHUSD 4h
+2026-01-28 20:17:30,857 - __main__ - INFO - 
+================================================================================
+2026-01-28 20:17:30,857 - __main__ - INFO - INGESTION PIPELINE COMPLETED
+2026-01-28 20:17:30,857 - __main__ - INFO - ================================================================================
+2026-01-28 20:17:30,858 - __main__ - INFO - 
+Summary:
+2026-01-28 20:17:30,858 - __main__ - INFO -   Total Tasks: 25
+2026-01-28 20:17:30,859 - __main__ - INFO -   Successful: 0
+2026-01-28 20:17:30,859 - __main__ - INFO -   Failed: 0
+2026-01-28 20:17:30,859 - __main__ - INFO -   No Data: 25
+2026-01-28 20:17:30,860 - __main__ - INFO - 
+Detailed Results:
+2026-01-28 20:17:30,860 - __main__ - INFO - Symbol     Timeframe  Status          Rows       Quality     
+2026-01-28 20:17:30,861 - __main__ - INFO - --------------------------------------------------------------------------------
+2026-01-28 20:17:30,863 - __main__ - INFO - EURUSD     1m         NO_DATA         0          N/A         
+2026-01-28 20:17:30,864 - __main__ - INFO - EURUSD     5m         NO_DATA         0          N/A         
+2026-01-28 20:17:30,864 - __main__ - INFO - EURUSD     15m        NO_DATA         0          N/A         
+2026-01-28 20:17:30,866 - __main__ - INFO - EURUSD     1h         NO_DATA         0          N/A         
+2026-01-28 20:17:30,866 - __main__ - INFO - EURUSD     4h         NO_DATA         0          N/A         
+2026-01-28 20:17:30,867 - __main__ - INFO - GBPUSD     1m         NO_DATA         0          N/A         
+2026-01-28 20:17:30,867 - __main__ - INFO - GBPUSD     5m         NO_DATA         0          N/A         
+2026-01-28 20:17:30,868 - __main__ - INFO - GBPUSD     15m        NO_DATA         0          N/A         
+2026-01-28 20:17:30,869 - __main__ - INFO - GBPUSD     1h         NO_DATA         0          N/A         
+2026-01-28 20:17:30,869 - __main__ - INFO - GBPUSD     4h         NO_DATA         0          N/A         
+2026-01-28 20:17:30,869 - __main__ - INFO - USDJPY     1m         NO_DATA         0          N/A         
+2026-01-28 20:17:30,870 - __main__ - INFO - USDJPY     5m         NO_DATA         0          N/A         
+2026-01-28 20:17:30,870 - __main__ - INFO - USDJPY     15m        NO_DATA         0          N/A         
+2026-01-28 20:17:30,871 - __main__ - INFO - USDJPY     1h         NO_DATA         0          N/A         
+2026-01-28 20:17:30,871 - __main__ - INFO - USDJPY     4h         NO_DATA         0          N/A         
+2026-01-28 20:17:30,872 - __main__ - INFO - BTCUSD     1m         NO_DATA         0          N/A         
+2026-01-28 20:17:30,872 - __main__ - INFO - BTCUSD     5m         NO_DATA         0          N/A         
+2026-01-28 20:17:30,873 - __main__ - INFO - BTCUSD     15m        NO_DATA         0          N/A         
+2026-01-28 20:17:30,873 - __main__ - INFO - BTCUSD     1h         NO_DATA         0          N/A         
+2026-01-28 20:17:30,874 - __main__ - INFO - BTCUSD     4h         NO_DATA         0          N/A         
+2026-01-28 20:17:30,874 - __main__ - INFO - ETHUSD     1m         NO_DATA         0          N/A         
+2026-01-28 20:17:30,875 - __main__ - INFO - ETHUSD     5m         NO_DATA         0          N/A         
+2026-01-28 20:17:30,876 - __main__ - INFO - ETHUSD     15m        NO_DATA         0          N/A         
+2026-01-28 20:17:30,876 - __main__ - INFO - ETHUSD     1h         NO_DATA         0          N/A         
+2026-01-28 20:17:30,877 - __main__ - INFO - ETHUSD     4h         NO_DATA         0          N/A         
+2026-01-28 20:17:30,885 - __main__ - INFO - 
+Summary saved to: logs/summary_20260128_201730.json
+2026-01-28 20:17:30,886 - __main__ - INFO - 
+Saved Files (0):
+2026-01-28 20:17:30,887 - __main__ - INFO - 
+================================================================================
