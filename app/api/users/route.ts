@@ -1,21 +1,32 @@
 import { NextResponse } from 'next/server';
-import { getAllUsers, createUser, deleteUser, toggleUserStatus, initDatabase } from '@/lib/db';
 
-// Initialize database on first request
-let dbInitialized = false;
-
-async function ensureDbInitialized() {
-  if (!dbInitialized) {
-    await initDatabase();
-    dbInitialized = true;
-  }
+export interface User {
+  id: string;
+  username: string;
+  password: string;
+  is_admin: boolean;
+  is_active: boolean;
+  subscription_end: string;
+  created_at: string;
 }
+
+// Simple in-memory storage for development
+// In production, this will be replaced by database
+let users: User[] = [
+  {
+    id: 'admin-001',
+    username: 'admin@nexus.com',
+    password: 'admin123',
+    is_admin: true,
+    is_active: true,
+    subscription_end: '2099-12-31T00:00:00.000Z',
+    created_at: new Date().toISOString()
+  }
+];
 
 // GET - Get all users
 export async function GET() {
   try {
-    await ensureDbInitialized();
-    const users = await getAllUsers();
     return NextResponse.json({ success: true, users });
   } catch (error) {
     console.error('GET users error:', error);
@@ -29,7 +40,6 @@ export async function GET() {
 // POST - Create new user
 export async function POST(request: Request) {
   try {
-    await ensureDbInitialized();
     const body = await request.json();
     
     const { id, username, password, is_admin, is_active, subscription_end } = body;
@@ -41,23 +51,29 @@ export async function POST(request: Request) {
       );
     }
     
-    const result = await createUser({
+    // Check if user already exists
+    const existingUser = users.find(u => u.username.toLowerCase() === username.toLowerCase());
+    if (existingUser) {
+      return NextResponse.json(
+        { success: false, error: 'User already exists' },
+        { status: 400 }
+      );
+    }
+    
+    const newUser: User = {
       id,
       username,
       password,
       is_admin: is_admin || false,
       is_active: is_active !== undefined ? is_active : true,
-      subscription_end
-    });
+      subscription_end,
+      created_at: new Date().toISOString()
+    };
     
-    if (!result.success) {
-      return NextResponse.json(
-        { success: false, error: result.error },
-        { status: 400 }
-      );
-    }
+    users.push(newUser);
+    console.log('User created:', username);
     
-    return NextResponse.json({ success: true, user: result.user });
+    return NextResponse.json({ success: true, user: newUser });
   } catch (error) {
     console.error('POST user error:', error);
     return NextResponse.json(
@@ -70,7 +86,6 @@ export async function POST(request: Request) {
 // DELETE - Delete user
 export async function DELETE(request: Request) {
   try {
-    await ensureDbInitialized();
     const { searchParams } = new URL(request.url);
     const id = searchParams.get('id');
     
@@ -81,8 +96,14 @@ export async function DELETE(request: Request) {
       );
     }
     
-    const result = await deleteUser(id);
-    return NextResponse.json(result);
+    const index = users.findIndex(u => u.id === id);
+    if (index !== -1) {
+      users.splice(index, 1);
+      console.log('User deleted:', id);
+      return NextResponse.json({ success: true });
+    }
+    
+    return NextResponse.json({ success: false, error: 'User not found' }, { status: 404 });
   } catch (error) {
     console.error('DELETE user error:', error);
     return NextResponse.json(
@@ -95,7 +116,6 @@ export async function DELETE(request: Request) {
 // PATCH - Toggle user status
 export async function PATCH(request: Request) {
   try {
-    await ensureDbInitialized();
     const body = await request.json();
     const { id } = body;
     
@@ -106,8 +126,14 @@ export async function PATCH(request: Request) {
       );
     }
     
-    const result = await toggleUserStatus(id);
-    return NextResponse.json(result);
+    const user = users.find(u => u.id === id);
+    if (user) {
+      user.is_active = !user.is_active;
+      console.log('User status toggled:', id, user.is_active);
+      return NextResponse.json({ success: true, user });
+    }
+    
+    return NextResponse.json({ success: false, error: 'User not found' }, { status: 404 });
   } catch (error) {
     console.error('PATCH user error:', error);
     return NextResponse.json(

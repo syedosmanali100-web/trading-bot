@@ -10,6 +10,26 @@ export interface User {
   created_at: string;
 }
 
+// Check if database is available
+const isDatabaseAvailable = () => {
+  return !!process.env.POSTGRES_URL;
+};
+
+// LocalStorage fallback for development
+const USERS_KEY = 'app_users_db';
+
+const getLocalUsers = (): User[] => {
+  if (typeof window === 'undefined') return [];
+  const data = localStorage.getItem(USERS_KEY);
+  return data ? JSON.parse(data) : [];
+};
+
+const saveLocalUsers = (users: User[]) => {
+  if (typeof window !== 'undefined') {
+    localStorage.setItem(USERS_KEY, JSON.stringify(users));
+  }
+};
+
 // Initialize database tables
 export async function initDatabase() {
   try {
@@ -54,6 +74,11 @@ export async function initDatabase() {
 
 // Get all users
 export async function getAllUsers(): Promise<User[]> {
+  // Use localStorage in development if database not available
+  if (!isDatabaseAvailable()) {
+    return [];
+  }
+  
   try {
     const result = await sql`
       SELECT * FROM users ORDER BY created_at DESC

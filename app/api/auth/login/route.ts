@@ -1,19 +1,17 @@
 import { NextResponse } from 'next/server';
-import { getUserByUsername, initDatabase } from '@/lib/db';
 
-// Initialize database on first request
-let dbInitialized = false;
-
-async function ensureDbInitialized() {
-  if (!dbInitialized) {
-    await initDatabase();
-    dbInitialized = true;
-  }
+interface User {
+  id: string;
+  username: string;
+  password: string;
+  is_admin: boolean;
+  is_active: boolean;
+  subscription_end: string;
+  created_at: string;
 }
 
 export async function POST(request: Request) {
   try {
-    await ensureDbInitialized();
     const { username, password } = await request.json();
     
     if (!username || !password) {
@@ -23,8 +21,23 @@ export async function POST(request: Request) {
       );
     }
     
-    // Get user from database
-    const user = await getUserByUsername(username.trim());
+    // Get users from the users API
+    const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
+    const usersResponse = await fetch(`${baseUrl}/api/users`, {
+      cache: 'no-store'
+    });
+    const usersData = await usersResponse.json();
+    
+    if (!usersData.success) {
+      return NextResponse.json(
+        { success: false, error: 'Failed to fetch users' },
+        { status: 500 }
+      );
+    }
+    
+    const user = usersData.users.find((u: User) => 
+      u.username.toLowerCase() === username.trim().toLowerCase()
+    );
     
     if (!user) {
       return NextResponse.json(

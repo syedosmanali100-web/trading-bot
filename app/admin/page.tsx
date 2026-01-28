@@ -364,7 +364,11 @@ export default function AdminPage() {
             <div className="flex-1">
               <h1 className="text-xl sm:text-2xl md:text-3xl font-bold gradient-text">ADMIN PANEL</h1>
               <p className="text-xs sm:text-sm text-muted-foreground">User Management & Subscription</p>
-              <p className="text-xs text-primary mt-1">☁️ {users.length} users in cloud database</p>
+              <p className="text-xs text-primary mt-1">
+                {typeof window !== 'undefined' && !process.env.POSTGRES_URL 
+                  ? '💾 Development Mode (In-Memory Storage)' 
+                  : '☁️ Cloud Database'} - {users.length} users
+              </p>
             </div>
           </div>
           <div className="flex flex-wrap items-center gap-2 w-full sm:w-auto">
