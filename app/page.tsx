@@ -87,17 +87,26 @@ export default function DashboardPage() {
   // Mock data for demonstration
   useEffect(() => {
     const checkAuth = async () => {
-      // Wait a bit for localStorage to be set from callback
-      await new Promise(resolve => setTimeout(resolve, 100))
+      // Wait for localStorage to be available
+      let attempts = 0
+      let userSession = localStorage.getItem('user_session')
       
-      const userSession = localStorage.getItem('user_session')
+      // Retry up to 5 times with 200ms delay
+      while (!userSession && attempts < 5) {
+        await new Promise(resolve => setTimeout(resolve, 200))
+        userSession = localStorage.getItem('user_session')
+        attempts++
+      }
+      
       if (!userSession) {
+        console.log('No session found after', attempts, 'attempts')
         router.push('/login')
         return
       }
 
       try {
         const user = JSON.parse(userSession)
+        console.log('User session loaded:', user)
         setUserData(user)
         
         // Fetch real Deriv account data if user is Deriv user

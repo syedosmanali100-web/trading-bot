@@ -129,8 +129,14 @@ export async function GET(request: Request) {
             const sessionData = ${JSON.stringify(sessionData)};
             localStorage.setItem('user_session', JSON.stringify(sessionData));
             
-            // Force a hard redirect to ensure localStorage is saved
-            window.location.replace('/');
+            // Verify localStorage was set
+            const verified = localStorage.getItem('user_session');
+            console.log('Session stored:', verified ? 'YES' : 'NO');
+            
+            // Wait a moment then redirect
+            setTimeout(() => {
+              window.location.replace('/');
+            }, 500);
           </script>
         </body>
       </html>
