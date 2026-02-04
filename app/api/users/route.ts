@@ -1,144 +1,145 @@
-import { NextResponse } from 'next/server';
+import { NextResponse } from 'next/server'
+import { db } from '@/lib/supabase/admin'
 
 export interface User {
-  id: string;
-  username: string;
-  password: string;
-  is_admin: boolean;
-  is_active: boolean;
-  subscription_end: string;
-  created_at: string;
+  id: string
+  username: string
+  password: string
+  is_admin: boolean
+  is_active: boolean
+  subscription_end: string
+  created_at: string
+  deriv_account_id?: string
+  deriv_token?: string
+  is_deriv_user: boolean
+  referral_code?: string
+  last_login?: string
+  account_balance?: number
+  total_trades?: number
 }
-
-// Simple in-memory storage for development
-// In production, this will be replaced by database
-let users: User[] = [
-  {
-    id: 'admin-001',
-    username: 'admin@nexus.com',
-    password: 'admin123',
-    is_admin: true,
-    is_active: true,
-    subscription_end: '2099-12-31T00:00:00.000Z',
-    created_at: new Date().toISOString()
-  }
-];
 
 // GET - Get all users
 export async function GET() {
   try {
-    return NextResponse.json({ success: true, users });
+    const users = await db.getUsers()
+    
+    // Remove sensitive data
+    const sanitizedUsers = users.map(u => ({
+      ...u,
+      password: undefined,
+      deriv_token: undefined
+    }))
+    
+    return NextResponse.json({ success: true, users: sanitizedUsers })
   } catch (error) {
-    console.error('GET users error:', error);
+    console.error('GET users error:', error)
     return NextResponse.json(
       { success: false, error: 'Failed to fetch users' },
       { status: 500 }
-    );
+    )
   }
 }
 
 // POST - Create new user
 export async function POST(request: Request) {
   try {
-    const body = await request.json();
+    const body = await request.json()
     
-    const { id, username, password, is_admin, is_active, subscription_end } = body;
+    const { id, username, password, is_admin, is_active, subscription_end } = body
     
     if (!id || !username || !password || !subscription_end) {
       return NextResponse.json(
         { success: false, error: 'Missing required fields' },
         { status: 400 }
-      );
+      )
     }
     
     // Check if user already exists
-    const existingUser = users.find(u => u.username.toLowerCase() === username.toLowerCase());
+    const existingUser = await db.getUserByUsername(username)
     if (existingUser) {
       return NextResponse.json(
         { success: false, error: 'User already exists' },
         { status: 400 }
-      );
+      )
     }
     
-    const newUser: User = {
+    const newUser = await db.createUser({
       id,
       username,
       password,
       is_admin: is_admin || false,
       is_active: is_active !== undefined ? is_active : true,
       subscription_end,
+      is_deriv_user: false,
       created_at: new Date().toISOString()
-    };
+    })
     
-    users.push(newUser);
-    console.log('User created:', username);
+    console.log('User created:', username)
     
-    return NextResponse.json({ success: true, user: newUser });
+    // Remove sensitive data
+    const sanitizedUser = { ...newUser, password: undefined, deriv_token: undefined }
+    
+    return NextResponse.json({ success: true, user: sanitizedUser })
   } catch (error) {
-    console.error('POST user error:', error);
+    console.error('POST user error:', error)
     return NextResponse.json(
       { success: false, error: 'Failed to create user' },
       { status: 500 }
-    );
+    )
   }
 }
 
 // DELETE - Delete user
 export async function DELETE(request: Request) {
   try {
-    const { searchParams } = new URL(request.url);
-    const id = searchParams.get('id');
+    const { searchParams } = new URL(request.url)
+    const id = searchParams.get('id')
     
     if (!id) {
       return NextResponse.json(
         { success: false, error: 'User ID required' },
         { status: 400 }
-      );
+      )
     }
     
-    const index = users.findIndex(u => u.id === id);
-    if (index !== -1) {
-      users.splice(index, 1);
-      console.log('User deleted:', id);
-      return NextResponse.json({ success: true });
-    }
+    await db.deleteUser(id)
+    console.log('User deleted:', id)
     
-    return NextResponse.json({ success: false, error: 'User not found' }, { status: 404 });
+    return NextResponse.json({ success: true })
   } catch (error) {
-    console.error('DELETE user error:', error);
+    console.error('DELETE user error:', error)
     return NextResponse.json(
       { success: false, error: 'Failed to delete user' },
       { status: 500 }
-    );
+    )
   }
 }
 
 // PATCH - Toggle user status
 export async function PATCH(request: Request) {
   try {
-    const body = await request.json();
-    const { id } = body;
+    const body = await request.json()
+    const { id } = body
     
     if (!id) {
       return NextResponse.json(
         { success: false, error: 'User ID required' },
         { status: 400 }
-      );
+      )
     }
     
-    const user = users.find(u => u.id === id);
-    if (user) {
-      user.is_active = !user.is_active;
-      console.log('User status toggled:', id, user.is_active);
-      return NextResponse.json({ success: true, user });
-    }
+    const user = await db.toggleUserStatus(id)
+    console.log('User status toggled:', id, user.is_active)
     
-    return NextResponse.json({ success: false, error: 'User not found' }, { status: 404 });
+    // Remove sensitive data
+    const sanitizedUser = { ...user, password: undefined, deriv_token: undefined }
+    
+    return NextResponse.json({ success: true, user: sanitizedUser })
   } catch (error) {
-    console.error('PATCH user error:', error);
+    console.error('PATCH user error:', error)
     return NextResponse.json(
       { success: false, error: 'Failed to update user' },
       { status: 500 }
-    );
+    )
   }
 }
