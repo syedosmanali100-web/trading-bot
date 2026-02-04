@@ -80,71 +80,8 @@ export async function GET(request: Request) {
       maxAge: 60 * 60 * 24 * 7 // 7 days
     })
 
-    // Create HTML response that sets localStorage and redirects
-    const html = `
-      <!DOCTYPE html>
-      <html>
-        <head>
-          <title>Logging in...</title>
-          <style>
-            body {
-              margin: 0;
-              padding: 0;
-              display: flex;
-              align-items: center;
-              justify-content: center;
-              min-height: 100vh;
-              background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-              font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            }
-            .container {
-              text-align: center;
-              color: white;
-            }
-            .spinner {
-              border: 4px solid rgba(255, 255, 255, 0.3);
-              border-radius: 50%;
-              border-top: 4px solid white;
-              width: 50px;
-              height: 50px;
-              animation: spin 1s linear infinite;
-              margin: 0 auto 20px;
-            }
-            @keyframes spin {
-              0% { transform: rotate(0deg); }
-              100% { transform: rotate(360deg); }
-            }
-            h2 { margin: 10px 0; font-size: 24px; }
-            p { margin: 5px 0; opacity: 0.9; }
-          </style>
-        </head>
-        <body>
-          <div class="container">
-            <div class="spinner"></div>
-            <h2>Successfully Connected!</h2>
-            <p>Redirecting to your dashboard...</p>
-          </div>
-          <script>
-            // Store session in localStorage
-            const sessionData = ${JSON.stringify(sessionData)};
-            localStorage.setItem('user_session', JSON.stringify(sessionData));
-            
-            // Verify localStorage was set
-            const verified = localStorage.getItem('user_session');
-            console.log('Session stored:', verified ? 'YES' : 'NO');
-            
-            // Wait a moment then redirect
-            setTimeout(() => {
-              window.location.replace('/');
-            }, 500);
-          </script>
-        </body>
-      </html>
-    `
-    
-    return new NextResponse(html, {
-      headers: { 'Content-Type': 'text/html' }
-    })
+    // Redirect directly to home page - session is already in cookie
+    return NextResponse.redirect(new URL('/', request.url))
   } catch (error) {
     console.error('Deriv OAuth callback error:', error)
     return NextResponse.redirect(new URL('/login?error=server_error', request.url))

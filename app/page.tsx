@@ -87,19 +87,27 @@ export default function DashboardPage() {
   // Mock data for demonstration
   useEffect(() => {
     const checkAuth = async () => {
-      // Wait for localStorage to be available
-      let attempts = 0
+      // First check localStorage
       let userSession = localStorage.getItem('user_session')
       
-      // Retry up to 5 times with 200ms delay
-      while (!userSession && attempts < 5) {
-        await new Promise(resolve => setTimeout(resolve, 200))
-        userSession = localStorage.getItem('user_session')
-        attempts++
+      // If not in localStorage, try to get from cookie
+      if (!userSession) {
+        try {
+          const response = await fetch('/api/auth/session')
+          const data = await response.json()
+          
+          if (data.success && data.session) {
+            // Store in localStorage for future use
+            localStorage.setItem('user_session', JSON.stringify(data.session))
+            userSession = JSON.stringify(data.session)
+          }
+        } catch (error) {
+          console.error('Error fetching session:', error)
+        }
       }
       
       if (!userSession) {
-        console.log('No session found after', attempts, 'attempts')
+        console.log('No session found')
         router.push('/login')
         return
       }
