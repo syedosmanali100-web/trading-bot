@@ -1,14 +1,27 @@
 import { createClient } from '@supabase/supabase-js'
+import type { SupabaseClient } from '@supabase/supabase-js'
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!
-const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY!
+let supabaseAdmin: SupabaseClient | null = null
 
-export const supabaseAdmin = createClient(supabaseUrl, supabaseServiceKey, {
-  auth: {
-    autoRefreshToken: false,
-    persistSession: false
+function getSupabaseAdmin() {
+  if (supabaseAdmin) return supabaseAdmin
+
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
+  const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY
+
+  if (!supabaseUrl || !supabaseServiceKey) {
+    throw new Error('Missing Supabase environment variables')
   }
-})
+
+  supabaseAdmin = createClient(supabaseUrl, supabaseServiceKey, {
+    auth: {
+      autoRefreshToken: false,
+      persistSession: false
+    }
+  })
+
+  return supabaseAdmin
+}
 
 // Database helper functions
 export interface User {
@@ -31,7 +44,8 @@ export interface User {
 export const db = {
   // Get all users
   async getUsers() {
-    const { data, error } = await supabaseAdmin
+    const admin = getSupabaseAdmin()
+    const { data, error } = await admin
       .from('users')
       .select('*')
       .order('created_at', { ascending: false })
@@ -42,7 +56,8 @@ export const db = {
 
   // Get user by username
   async getUserByUsername(username: string) {
-    const { data, error } = await supabaseAdmin
+    const admin = getSupabaseAdmin()
+    const { data, error } = await admin
       .from('users')
       .select('*')
       .eq('username', username)
@@ -54,7 +69,8 @@ export const db = {
 
   // Get user by Deriv account ID
   async getUserByDerivId(derivAccountId: string) {
-    const { data, error } = await supabaseAdmin
+    const admin = getSupabaseAdmin()
+    const { data, error } = await admin
       .from('users')
       .select('*')
       .eq('deriv_account_id', derivAccountId)
@@ -66,7 +82,8 @@ export const db = {
 
   // Create new user
   async createUser(user: Partial<User>) {
-    const { data, error } = await supabaseAdmin
+    const admin = getSupabaseAdmin()
+    const { data, error } = await admin
       .from('users')
       .insert([user])
       .select()
@@ -78,7 +95,8 @@ export const db = {
 
   // Update user
   async updateUser(id: string, updates: Partial<User>) {
-    const { data, error } = await supabaseAdmin
+    const admin = getSupabaseAdmin()
+    const { data, error } = await admin
       .from('users')
       .update(updates)
       .eq('id', id)
@@ -91,7 +109,8 @@ export const db = {
 
   // Delete user
   async deleteUser(id: string) {
-    const { error } = await supabaseAdmin
+    const admin = getSupabaseAdmin()
+    const { error } = await admin
       .from('users')
       .delete()
       .eq('id', id)
@@ -110,7 +129,8 @@ export const db = {
 
   // Get user by ID
   async getUserById(id: string) {
-    const { data, error } = await supabaseAdmin
+    const admin = getSupabaseAdmin()
+    const { data, error } = await admin
       .from('users')
       .select('*')
       .eq('id', id)
@@ -138,7 +158,8 @@ export const db = {
     profit_loss?: number
     status?: string
   }) {
-    const { data, error } = await supabaseAdmin
+    const admin = getSupabaseAdmin()
+    const { data, error } = await admin
       .from('deriv_trades')
       .insert([trade])
       .select()
@@ -150,7 +171,8 @@ export const db = {
 
   // Get user trades
   async getUserTrades(userId: string, limit = 50) {
-    const { data, error } = await supabaseAdmin
+    const admin = getSupabaseAdmin()
+    const { data, error } = await admin
       .from('deriv_trades')
       .select('*')
       .eq('user_id', userId)
