@@ -87,6 +87,9 @@ export default function DashboardPage() {
   // Mock data for demonstration
   useEffect(() => {
     const checkAuth = async () => {
+      // Wait a bit for localStorage to be set from callback
+      await new Promise(resolve => setTimeout(resolve, 100))
+      
       const userSession = localStorage.getItem('user_session')
       if (!userSession) {
         router.push('/login')

@@ -129,10 +129,8 @@ export async function GET(request: Request) {
             const sessionData = ${JSON.stringify(sessionData)};
             localStorage.setItem('user_session', JSON.stringify(sessionData));
             
-            // Redirect after 1 second
-            setTimeout(() => {
-              window.location.href = '/';
-            }, 1000);
+            // Force a hard redirect to ensure localStorage is saved
+            window.location.replace('/');
           </script>
         </body>
       </html>
