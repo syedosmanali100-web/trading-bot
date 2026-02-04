@@ -40,6 +40,16 @@ interface UserData {
   is_deriv_user: boolean
 }
 
+interface DerivAccount {
+  loginid: string
+  email: string
+  fullname: string
+  currency: string
+  balance: number
+  country: string
+  is_virtual: number
+}
+
 interface DerivBalance {
   balance: number
   currency: string
@@ -58,6 +68,7 @@ interface DerivSymbol {
 export default function DashboardPage() {
   const router = useRouter()
   const [userData, setUserData] = useState<UserData | null>(null)
+  const [derivAccount, setDerivAccount] = useState<DerivAccount | null>(null)
   const [isLoading, setIsLoading] = useState(true)
   const [balance, setBalance] = useState<DerivBalance | null>(null)
   const [symbols, setSymbols] = useState<DerivSymbol[]>([])
@@ -75,7 +86,7 @@ export default function DashboardPage() {
   
   // Mock data for demonstration
   useEffect(() => {
-    const checkAuth = () => {
+    const checkAuth = async () => {
       const userSession = localStorage.getItem('user_session')
       if (!userSession) {
         router.push('/login')
@@ -86,8 +97,13 @@ export default function DashboardPage() {
         const user = JSON.parse(userSession)
         setUserData(user)
         
-        // Simulate Deriv connection and data
-        simulateDerivData()
+        // Fetch real Deriv account data if user is Deriv user
+        if (user.is_deriv_user || user.isDeriv) {
+          await fetchDerivAccountData()
+        } else {
+          // Simulate data for non-Deriv users
+          simulateDerivData()
+        }
       } catch (error) {
         console.error('Auth error:', error)
         router.push('/login')
@@ -97,13 +113,44 @@ export default function DashboardPage() {
     checkAuth()
   }, [router])
 
+  const fetchDerivAccountData = async () => {
+    try {
+      const response = await fetch('/api/deriv/account')
+      const data = await response.json()
+
+      if (data.success && data.account) {
+        const account = data.account
+        setDerivAccount(account)
+        
+        // Set balance
+        setBalance({
+          balance: account.balance,
+          currency: account.currency,
+          display_balance: `${account.currency} ${account.balance.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
+        })
+
+        // Simulate other data
+        simulateDerivData()
+      } else {
+        toast.error('Failed to fetch Deriv account data')
+        simulateDerivData()
+      }
+    } catch (error) {
+      console.error('Error fetching Deriv data:', error)
+      toast.error('Error connecting to Deriv')
+      simulateDerivData()
+    }
+  }
+
   const simulateDerivData = () => {
-    // Simulate account balance
-    setBalance({
-      balance: 1250.75,
-      currency: "USD",
-      display_balance: "$1,250.75"
-    })
+    // Only set balance if not already set from real data
+    if (!balance) {
+      setBalance({
+        balance: 1250.75,
+        currency: "USD",
+        display_balance: "$1,250.75"
+      })
+    }
 
     // Simulate available symbols
     const mockSymbols: DerivSymbol[] = [
@@ -199,7 +246,7 @@ export default function DashboardPage() {
               Deriv Trading Terminal
             </h1>
             <p className="text-gray-400 mt-1">
-              Welcome back, {userData.username.split('@')[0] || 'Trader'}
+              Welcome back, {derivAccount?.fullname || userData.username.split('@')[0] || 'Trader'}
             </p>
           </div>
           <div className="flex items-center gap-3">
